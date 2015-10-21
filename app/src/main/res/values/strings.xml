@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Gallery</string>
+    <string name="title_rate">RATE</string>
+    <string name="title_new_image">NEW IMAGE</string>
+</resources>
