@@ -6,7 +6,32 @@
     <string name="title_save">SAVE</string>
     <string name="title_hint_name">Title</string>
     <string name="error_save">Upps... Can´t save</string>
+    <string name="error_save_empty">Upps... Can´t save. Write a title</string>
+    <string name="error_save_no_image">Upps... Can´t save. Select an image</string>
+
     <string name="ok_save">It saved successfully</string>
     <string name="action_settings">GitHub</string>
+    <string name="title_like">LIKE</string>
+    <string name="title_unlike">UNLIKE</string>
+    <string name="like_plus">You Like!</string>
+    <string name="like_less">You don´t like</string>
+    <string name="title_liked">Liked:</string>
+    <string name="title_unliked">Unliked:</string>
+    <string name="title_return_list">RETURN TO LIST</string>
+    <string name="title_not_yet">Uppss.. Not yet </string>
+    <string name="title_swipe_left">Swipe left</string>
+
+    <string name="activity_title_addphotos">Add Image</string>
+    <string name="activity_title_rating">Rating Gallery</string>
+    <string name="activity_title_results">Results</string>
+
+    <string name="add_photo">Add Photo!</string>
+
+    <string-array name="array_options">
+        <item>Take Photo</item>
+        <item>Choose from Library</item>
+        <item>Cancel</item>
+    </string-array>
+
 
 </resources>

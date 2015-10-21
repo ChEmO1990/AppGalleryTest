@@ -38,4 +38,11 @@ dependencies {
 
     //SnackBar
     compile 'com.github.mrengineer13:snackbar:1.2.0'
+
+    //Google Gson
+    compile 'com.google.code.gson:gson:2.3.1'
+
+    //Volley Mirror
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+
 }

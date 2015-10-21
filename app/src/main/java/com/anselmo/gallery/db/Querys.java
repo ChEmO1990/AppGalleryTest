@@ -60,4 +60,58 @@ public class Querys {
 		String query = "DELETE FROM tbl_images";
 		dataBaseHelper.execSQL(query);
 	}
+
+	public static void updateLike( ImageGallery image ) {
+		int currentCount = 0;
+
+		//Query
+		String query = "SELECT liked_count FROM tbl_images where id_image =" + image.getId();
+
+		//Cursor
+		Cursor cursor = dataBaseHelper.rawQuery(query, null);
+
+		if( cursor.getCount() != 0 ) {
+			while( cursor.moveToNext() ) {
+				currentCount = cursor.getInt(0);
+			}
+		}
+
+		cursor.close();
+
+		int total = currentCount += 1;
+
+		ContentValues update = new ContentValues();
+		update.put("liked_count", total);
+
+		//Add
+		dataBaseHelper.update("tbl_images", update, "id_image = " + image.getId(), null);
+	}
+
+	public static void updateUnLike( ImageGallery image ) {
+		int currentCount = 0;
+
+		//Query
+		String query = "SELECT unliked_count FROM tbl_images where id_image =" + image.getId();
+
+		//Cursor
+		Cursor cursor = dataBaseHelper.rawQuery(query, null);
+
+		if( cursor.getCount() != 0 ) {
+			while( cursor.moveToNext() ) {
+				currentCount = cursor.getInt(0);
+			}
+		}
+
+		cursor.close();
+
+		int total = currentCount += 1;
+
+		ContentValues update = new ContentValues();
+		update.put("unliked_count", total);
+
+		//Add
+		dataBaseHelper.update("tbl_images", update, "id_image = " + image.getId(), null);
+	}
+
+
 }

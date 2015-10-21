@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.anselmo.gallery" >
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -21,6 +22,8 @@
         <activity android:name=".ui.AddPhotoActivity" >
         </activity>
         <activity android:name=".ui.RateGalleryActivity" >
+        </activity>
+        <activity android:name=".ui.ShowResultActivity" >
         </activity>
     </application>
 

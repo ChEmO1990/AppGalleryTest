@@ -2,6 +2,7 @@ package com.anselmo.gallery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.anselmo.gallery.models.ImageGallery;
 import com.anselmo.gallery.R;
+import com.anselmo.gallery.models.ImageGallery;
+import com.anselmo.gallery.ui.ShowResultActivity;
 import com.bumptech.glide.Glide;
 import com.vstechlab.easyfonts.EasyFonts;
 
@@ -85,6 +87,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         @Override
         public void onClick(View view) {
             int position = getLayoutPosition();
+            Intent i = new Intent(context, ShowResultActivity.class);
+            i.putExtra("index", position);
+            context.startActivity(i);
         }
     }
 

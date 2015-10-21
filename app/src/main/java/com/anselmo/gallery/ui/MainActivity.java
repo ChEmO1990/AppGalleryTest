@@ -2,16 +2,17 @@ package com.anselmo.gallery.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 
-import com.anselmo.gallery.utils.DividerItemDecoration;
 import com.anselmo.gallery.R;
 import com.anselmo.gallery.adapters.GalleryAdapter;
 import com.anselmo.gallery.db.Querys;
 import com.anselmo.gallery.models.ImageGallery;
+import com.anselmo.gallery.utils.DividerItemDecoration;
+import com.github.mrengineer13.snackbar.SnackBar;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        getSupportActionBar().setTitle("Gallery List");
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -60,6 +63,11 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
 
@@ -74,5 +82,23 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_new_image) void saveImage() {
         Intent intent = new Intent( this, AddPhotoActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_rate) void rate() {
+        if( Querys.getImagesFromDB() != null ) {
+            if( Querys.getImagesFromDB().size() >= 3 ) {
+                Intent intent = new Intent( this, RateGalleryActivity.class);
+                startActivity(intent);
+            } else {
+                new SnackBar.Builder(this)
+                        .withMessage(getString(R.string.title_not_yet))
+                        .withTypeFace(EasyFonts.robotoLight(this))
+                        .withTextColorId(R.color.colorPrimary)
+                        .withStyle(com.github.mrengineer13.snackbar.SnackBar.Style.DEFAULT)
+                        .withDuration(com.github.mrengineer13.snackbar.SnackBar.MED_SNACK)
+                        .show();
+            }
+        }
+
     }
 }

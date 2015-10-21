@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,12 +48,19 @@ public class AddPhotoActivity extends BaseActivity {
     private static int REQUEST_CAMERA       = 0;
     private static int SELECT_FILE          = 1;
     private boolean status_save = false;
+    private File destination = null;
+    private String selectedImagePath = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
         ButterKnife.bind(this);
+
+        getSupportActionBar().setTitle(getString(R.string.activity_title_addphotos));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
     }
 
 
@@ -67,23 +75,39 @@ public class AddPhotoActivity extends BaseActivity {
     }
 
     @OnClick(R.id.btn_save_image) void saveImage() {
-        if( !status_save ) {
+        if( TextUtils.isEmpty( editTitle.getText().toString() ) ) {
             new SnackBar.Builder(this)
-                    .withMessage(getString(R.string.error_save))
+                    .withMessage(getString(R.string.error_save_empty))
                     .withTypeFace(EasyFonts.robotoLight(this))
                     .withTextColorId(R.color.colorPrimary)
                     .withStyle(SnackBar.Style.DEFAULT)
                     .withDuration(SnackBar.MED_SNACK)
                     .show();
         } else {
-            finish();
+            if (status_save && destination != null) {
+                //Capture Photo
+                Querys.addImage(new ImageGallery(0, destination.getAbsolutePath(), editTitle.getText().toString(), 0, 0));
+                finish();
+            } else if (status_save && selectedImagePath != null) {
+                Querys.addImage(new ImageGallery(0, selectedImagePath, editTitle.getText().toString(), 0, 0));
+                finish();
+            } else {
+                new SnackBar.Builder(this)
+                        .withMessage(getString(R.string.error_save_no_image))
+                        .withTypeFace(EasyFonts.robotoLight(this))
+                        .withTextColorId(R.color.colorPrimary)
+                        .withStyle(SnackBar.Style.DEFAULT)
+                        .withDuration(SnackBar.MED_SNACK)
+                        .show();
+            }
         }
     }
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
+        final CharSequence[] items = getResources().getStringArray(R.array.array_options);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle(getString(R.string.add_photo));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -123,10 +147,8 @@ public class AddPhotoActivity extends BaseActivity {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-        File destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
+        destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
 
-        //AddImage
-        Querys.addImage( new ImageGallery(0, destination.getAbsolutePath(), editTitle.getText().toString(), 0, 0));
         status_save = true;
 
         FileOutputStream fo;
@@ -152,10 +174,8 @@ public class AddPhotoActivity extends BaseActivity {
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         cursor.moveToFirst();
 
-        String selectedImagePath = cursor.getString(column_index);
+        selectedImagePath = cursor.getString(column_index);
 
-        //Add image
-        Querys.addImage( new ImageGallery(0, selectedImagePath, editTitle.getText().toString(), 0, 0));
         status_save = true;
 
         Bitmap bm;
