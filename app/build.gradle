@@ -33,6 +33,9 @@ dependencies {
     //RecyclerView
     compile 'com.android.support:recyclerview-v7:23.0.1'
 
-    //RecyclerView animations
-    compile 'jp.wasabeef:recyclerview-animators:1.3.0'
+    //Injection
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    //SnackBar
+    compile 'com.github.mrengineer13:snackbar:1.2.0'
 }

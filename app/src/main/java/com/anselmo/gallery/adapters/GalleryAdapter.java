@@ -1,4 +1,4 @@
-package com.anselmo.gallery;
+package com.anselmo.gallery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.anselmo.gallery.models.ImageGallery;
+import com.anselmo.gallery.R;
 import com.bumptech.glide.Glide;
 import com.vstechlab.easyfonts.EasyFonts;
 

@@ -1,4 +1,4 @@
-package com.anselmo.gallery;
+package com.anselmo.gallery.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -1,4 +1,4 @@
-package com.anselmo.gallery;
+package com.anselmo.gallery.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,49 +11,78 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import com.anselmo.gallery.R;
+import com.anselmo.gallery.db.Querys;
+import com.anselmo.gallery.models.ImageGallery;
+import com.github.mrengineer13.snackbar.SnackBar;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-    private static int RESULT_LOAD_IMAGE = 1;
-    int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private RecyclerView recyclerView;
-    private ArrayList<ImageGallery> items;
-    private GalleryAdapter adapter;
+public class AddPhotoActivity extends BaseActivity {
+    @Bind(R.id.btn_select_image)
+    Button selectImage;
+
+    @Bind(R.id.btn_save_image)
+    Button saveImage;
+
+    @Bind(R.id.edit_title_image)
+    EditText editTitle;
+
+    @Bind(R.id.image_preview)
+    ImageView image;
+
+    private static int REQUEST_CAMERA       = 0;
+    private static int SELECT_FILE          = 1;
+    private boolean status_save = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_gallery);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-
-        items = new ArrayList<>();
-
-        adapter = new GalleryAdapter(this, items);
-        recyclerView.setAdapter(adapter);
+        setContentView(R.layout.activity_add_photo);
+        ButterKnife.bind(this);
+    }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @OnClick(R.id.btn_select_image) void openDialogImages() {
         selectImage();
+    }
 
+    @OnClick(R.id.btn_save_image) void saveImage() {
+        if( !status_save ) {
+            new SnackBar.Builder(this)
+                    .withMessage(getString(R.string.error_save))
+                    .withTypeFace(EasyFonts.robotoLight(this))
+                    .withTextColorId(R.color.colorPrimary)
+                    .withStyle(SnackBar.Style.DEFAULT)
+                    .withDuration(SnackBar.MED_SNACK)
+                    .show();
+        } else {
+            finish();
+        }
     }
 
     private void selectImage() {
         final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -77,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -97,10 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
         File destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
 
-        Log.i("IMAGENNNNN_URL", destination.getAbsolutePath());
-
-        items.add(new ImageGallery(1, destination.getAbsolutePath(), "Titulo de la imagen"));
-        adapter.notifyDataSetChanged();
+        //AddImage
+        Querys.addImage( new ImageGallery(0, destination.getAbsolutePath(), editTitle.getText().toString(), 0, 0));
+        status_save = true;
 
         FileOutputStream fo;
         try {
@@ -114,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //ivImage.setImageBitmap(thumbnail);
+        image.setImageBitmap(thumbnail);
     }
 
     private void onSelectFromGalleryResult(Intent data) {
@@ -127,10 +154,9 @@ public class MainActivity extends AppCompatActivity {
 
         String selectedImagePath = cursor.getString(column_index);
 
-        Log.i("IMAGENNNNN_URL", selectedImagePath);
-
-        items.add(new ImageGallery(1, selectedImagePath, "Titulo de la imagen"));
-        adapter.notifyDataSetChanged();
+        //Add image
+        Querys.addImage( new ImageGallery(0, selectedImagePath, editTitle.getText().toString(), 0, 0));
+        status_save = true;
 
         Bitmap bm;
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -145,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         options.inJustDecodeBounds = false;
         bm = BitmapFactory.decodeFile(selectedImagePath, options);
 
-        //ivImage.setImageBitmap(bm);
+        image.setImageBitmap(bm);
     }
-
 }

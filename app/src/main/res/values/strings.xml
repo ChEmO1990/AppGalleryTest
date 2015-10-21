@@ -2,4 +2,11 @@
     <string name="app_name">Gallery</string>
     <string name="title_rate">RATE</string>
     <string name="title_new_image">NEW IMAGE</string>
+    <string name="title_select_image">SELECT IMAGE</string>
+    <string name="title_save">SAVE</string>
+    <string name="title_hint_name">Title</string>
+    <string name="error_save">Upps... Can´t save</string>
+    <string name="ok_save">It saved successfully</string>
+    <string name="action_settings">GitHub</string>
+
 </resources>
